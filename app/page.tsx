@@ -71,7 +71,8 @@ export default function Home() {
         placeholder="Apellido"       
         onChange={(e)=>handlePersona(e.currentTarget.name,e.currentTarget.value)}/> <br />
         <span>{eApellido}</span><br />
-        <button>Registrar</button>
+        <button
+        onClick={()=>handleRegistrar()}>Registrar</button>
 
     </form>
 );
