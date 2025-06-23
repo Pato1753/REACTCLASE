@@ -1,21 +1,33 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { json } from "stream/consumers";
 
-interface Persona{
+interface Persona{  
   nombre : string,
   apellido : string
 }
 
-let initialStatePersona:Persona = {
-  nombre:"",
+let initialStatePersona:Persona = {  //es como una clase donde tiene atributos de persona
+  nombre:"", // guarda un string
   apellido:""
 }
 
 export default function Home() {
-  const [persona, setpersona] = useState(initialStatePersona)
+  const miStorange = window.localStorage
 
+  const [persona, setpersona] = useState(initialStatePersona)
+  const [personas, setpersonas] = useState<Persona[]>([])
   const[eNombre, setENombre] = useState("")
+  const [eApellido, seteApellido] = useState("")
+  useEffect(()=>{
+    let listadoStr = miStorange.getItem("Personas")
+    if(listadoStr != null){
+      let listado = JSON.parse(listadoStr)
+      setpersonas(listado)
+    }
+  },[])
+
   const handlePersona = (name:string,value:string)=>{
     setpersona(
       {...persona,[name]:value}
@@ -26,7 +38,21 @@ export default function Home() {
     else{
       setENombre("")
     }
+    if(persona.apellido.length < 3){
+      seteApellido("Debe tener mas de 3 caracteres")
+    }
+    else{
+      seteApellido("")
+    }
   }
+
+  const handleRegistrar = ()=>{
+
+    miStorange.setItem("personas",JSON.stringify([...personas,persona]))
+  }
+
+
+
   return (
     <form>
       <h1>Hola {persona.nombre} {persona.apellido}</h1>
@@ -43,11 +69,10 @@ export default function Home() {
         name="apellido" 
         type="text" 
         placeholder="Apellido"       
-        onChange={(e)=>handlePersona(e.currentTarget.name,e.currentTarget.value)}/>
-        <span></span><br />
+        onChange={(e)=>handlePersona(e.currentTarget.name,e.currentTarget.value)}/> <br />
+        <span>{eApellido}</span><br />
         <button>Registrar</button>
 
     </form>
-
 );
 }
