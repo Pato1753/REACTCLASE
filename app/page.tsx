@@ -51,7 +51,7 @@ export default function Home() {
     miStorange.setItem("personas",JSON.stringify([...personas,persona]))
   }
 
-
+// investiga
 
   return (
     <form>
